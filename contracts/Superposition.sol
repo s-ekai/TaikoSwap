@@ -47,7 +47,7 @@ contract Superpositon {
         _;
     }
 
-    constructor(address _rewardToken, address _bridgeContract, uint256 _l1ChainId, uint256 _l2ChainId) public {
+    constructor(address _bridgeContract, uint256 _l1ChainId, uint256 _l2ChainId) public {
         owner = msg.sender;
         // INFO: Bridge Contract on sepolia. it must be 0x2aB7C0ab9AB47fcF370d13058BfEE28f2Ec0940c。
         bridgeContract = _bridgeContract;
