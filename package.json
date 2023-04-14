@@ -20,6 +20,9 @@
   },
   "homepage": "https://github.com/s-ekai/superposition_l1#readme",
   "dependencies": {
-    "dotenv": "^16.0.3"
+    "@truffle/hdwallet-provider": "^2.1.9",
+    "dotenv": "^16.0.3",
+    "truffle-contract": "^4.0.31",
+    "truffle-hdwallet-provider": "^1.0.17"
   }
 }

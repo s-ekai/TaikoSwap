@@ -11,17 +11,14 @@ module.exports = {
       network_id: '*',
     },
     sepolia: {
-      provider: () => new HDWalletProvider(MNEMONIC, NODEENDPOINT),
-      network_id: 11155111,
-      gas: 5500000,
-      confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: true,
+      provider: () => new HDWalletProvider(MNEMONIC, NODEENDPOINT, {timeout: 120000}),
+      network_id: '11155111',
+      gas: 14465030
     },
   },
   compilers: {
     solc: {
-      version: '0.8.9',
+      version: '0.8.0',
       optimizer: {
         enabled: true,
         runs: 200,
