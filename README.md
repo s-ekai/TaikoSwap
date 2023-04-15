@@ -1,9 +1,10 @@
-
 ## TaikoPuppeteer
 
-This app allows you to execute contracts from L1 to L2, hence the name TaikoPuppeteer.
+The project aims to enable cross-chain swaps between Ethereum and Taiko using Taiko's cross-chain messaging. When a user wants to swap L1 USDC for L2 USDT, the USDC is first sent to TaikoSwap on L1, and then TaikoSwap sends that information to SignalService. If the signal is confirmed on TaikoSwap on L2, TaikoSwap sends USDT to the user.
 
-By using cross-chain messaging, it is possible to execute contracts from L1 to L2. The following struct is the current Message being used, but by adding information about which contract and which function to execute, any function can be executed.
+
+The current message format for the bridge is as follows, but it will be changed to a format suitable for cross-chain swaps.
+
 
 struct Message {
     uint256 id;
@@ -21,35 +22,17 @@ struct Message {
     string memo;
 }
 
-For example, the following structs can be used to execute functions in the L2 dex:
-struct MessageSwap {}
-struct MessageProvideLiquidity {}
-struct MessageRemoveLiquidity {}
 
-This information is hashed on L1 and sent to L2. On L2, the function on L2 is executed upon receiving this information. The function, such as processMessage, receives the message and executes the function depending on the type of the message. The relayer will ultimately execute the functions mentioned above (and will be incentivized accordingly). By defining such functionality, cross-chain swaps can be achieved, for example.
+The message contains information on which tokens to swap and at what rate.
 
-However, having multiple Message structures as shown above is not very versatile. Therefore, we define an existing attribute bytes32 executeOption. The first 20 bytes represent the contract address, and the next 12 bytes represent the function name. For simplicity, we do not consider the arguments for now. To support arguments, we can use bytes executeOption and specify the number of arguments after the function name, followed by the data type and value for each argument.
+The basic configuration for creating a prototype is as follows:
 
+- [ ] Create a simple DEX on L1.
+- [ ] Create a feature on the DEX to enable cross-chain swaps.
+- [ ] Specifically, the DEX will hold the tokens before the swap and convert that information into the message format and then save it as a signal in the SignalService.
+- [ ] Create a simple DEX on L2.
+- [ ] When the L2 DEX contract receives the above signal, it will send the user the swapped tokens.
+- [ ] The above process is similar to proccessMessage and can be executed by either the user or a relayer.
+- [ ] Note that if the L1 DEX does not confirm that the processing on L2 has been executed correctly, it will store the tokens in the vault within the DEX.
+- [ ] If the process fails, the tokens will be returned to the user from the vault.
 
-注意: トークンを扱う処理をする場合はL2側で実行されるコントラクトがSignalServiceにトークンを扱えるようにapproveしておく必要がある。
-
-
-
-しかし今回のケースではトークンを扱うと非常に難解になるためにトークンを使わない、
-l1からl2のコントラクトを叩いてL2のコントラクで管理してる値を変更する様なコードを書きます。
-processMessageの処理はブリッジと密接につながっており、今回のハッカソンでそちらまで対応するのは不可能だと判断したため。
-
-今回のアプリケーションでは、
-L1からsendSignalをする。
-L2でsignalを受け取ったらそのシグナルをもとに実行する。
-メッセージの形式は下記の様な簡単なものを扱います。
-
-struct Message {
-    address asker;
-    address contract;
-    bytes funcSig;
-}
-
-
-counterは勝手にこれを使わせてもらおう。
-// https://explorer.a2.taiko.xyz/address/0x969106382BB5def3Bb17B986311ee3FbFEb77a62/contracts#address-tabs
