@@ -1943,12 +1943,12 @@
     "11155111": {
       "events": {},
       "links": {},
-      "address": "0x496d40140e9Ee87886Eeca2cbBfF06acB09C670b",
-      "transactionHash": "0x355d1f775f57c9fd8c0ef66f3cc8a0abe69c8ac42b0b17b1f1d5fceb62caa1ec"
+      "address": "0x8475D595c02F666cdE9a47E471D036Cb4F428aEB",
+      "transactionHash": "0x50dd866febe8eba503e263e8cc82181738acf033a60de2cad4975bed58865d08"
     }
   },
   "schemaVersion": "3.4.13",
-  "updatedAt": "2023-04-14T15:53:25.953Z",
+  "updatedAt": "2023-04-15T08:21:01.966Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -1,38 +1,38 @@
 pragma solidity ^0.8.0;
 
-interface SignalServiceInterface {
+interface ISignalService {
     function sendSignal(bytes32 signal) external returns (bytes32 storageSlot);
 }
 
 contract Puppeteer {
 
-    address public SignalServiceContract;
+    ISignalService private iSignalService;
 
     struct Message {
-        uint256 id;
-        address sender;
-        uint256 srcChainId;
-        uint256 destChainId;
-        address owner;
-        address to;
-        address refundAddress;
-        uint256 depositValue;
-        uint256 callValue;
-        uint256 processingFee;
-        uint256 gasLimit;
-        bytes data;
-        string memo;
-        bytes32 executeOption;
+        address asker;
+        address distContract;
+        bytes32 funcSig;
     }
 
     constructor(address _SignalServiceContract) public {
-        SignalServiceContract = _SignalServiceContract;
+        iSignalService = ISignalService(_SignalServiceContract);
     }
 
     // INFO: make message hashed and send it as a signal
-    function sendSignal(Message memory message) public payable returns (string memory) {
+    function sendSignal(address distContract, string memory functionName) public returns (bytes32) {
+        bytes32 funcSig = bytes4(keccak256(abi.encodePacked(functionName)));
+
+        Message memory message = Message({
+            asker: msg.sender,
+            distContract: distContract,
+            funcSig: funcSig
+        });
+
         bytes32 signal = keccak256(abi.encode("TAIKO_BRIDGE_MESSAGE", message));
-        SignalServiceInterface SignalService = SignalServiceInterface(SignalServiceContract);
-        bytes32 result = SignalService.sendSignal(signal);
+        bytes32 result = iSignalService.sendSignal(signal);
+        return result;
     }
 }
+
+// INFO: これはできない。
+// なぜならストレージはこのコントラクトにはないから。

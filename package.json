@@ -20,8 +20,13 @@
   },
   "homepage": "https://github.com/s-ekai/superposition_l1#readme",
   "dependencies": {
+    "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
+    "@ethersproject/solidity": "^5.7.0",
+    "@ethersproject/units": "^5.7.0",
     "@truffle/hdwallet-provider": "^2.1.9",
     "dotenv": "^16.0.3",
+    "ethers": "^6.3.0",
     "truffle-contract": "^4.0.31",
     "truffle-hdwallet-provider": "^1.0.17"
   }

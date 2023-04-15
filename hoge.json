@@ -1,0 +1,9 @@
+[
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [{ "type": "bytes32", "name": "storageSlot", "internalType": "bytes32" }],
+    "name": "sendSignal",
+    "inputs": [{ "type": "bytes32", "name": "signal", "internalType": "bytes32" }]
+  }
+]
