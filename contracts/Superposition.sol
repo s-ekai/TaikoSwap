@@ -1,16 +1,6 @@
 pragma solidity ^0.8.0;
 
-
-contract Superposition {
-
-    address public owner;
-    address public bridgeContract;
-    uint256 public currentMessageId;
-    uint256 private nonce;
-    uint256 public l1ChainId;
-    uint256 public l2ChainId;
-    address public l2Contract;
-
+interface BridgeInterface {
     struct Message {
         uint256 id;
         address sender;
@@ -26,6 +16,18 @@ contract Superposition {
         bytes data;
         string memo;
     }
+    function sendMessage( BridgeInterface.Message memory message ) external payable returns (bytes32 msgHash);
+}
+
+contract Superposition {
+
+    address public owner;
+    address public bridgeContract;
+    uint256 public currentMessageId;
+    uint256 private nonce;
+    uint256 public l1ChainId;
+    uint256 public l2ChainId;
+    address public l2Contract;
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only contract owner can call this function");
@@ -37,31 +39,33 @@ contract Superposition {
         bridgeContract = _bridgeContract;
         l1ChainId = _l1ChainId;
         l2ChainId = _l2ChainId;
-
         l2Contract = msg.sender;
     }
 
-    function send(uint _amount) public payable {
+    function send() public payable returns (string memory) {
+        BridgeInterface bridgeContractInstance = BridgeInterface(bridgeContract);
 
-        Message memory message = Message(
-            getRandom(),
+        BridgeInterface.Message memory message = BridgeInterface.Message(
+            534334320,
             msg.sender,
             l1ChainId,
             l2ChainId,
             msg.sender,
             msg.sender,
             address(0),
-            _amount,
+            msg.value,
             0,
             0,
             0,
             new bytes(0),
             ""
         );
+        try bridgeContractInstance.sendMessage(message) returns (bytes32 msgHash) {
+            return 'success';
+        } catch Error(string memory errorMessage) {
+            return errorMessage;
+        }
 
-        bytes memory payload = abi.encodeWithSignature("sendMessage(Message)", message);
-        (bool success, bytes memory result) = bridgeContract.call(payload);
-        require(success, "Call failed");
     }
 
 
